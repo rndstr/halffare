@@ -1,0 +1,6 @@
+= halffare
+
+Describe your project here
+
+:include:halffare.rdoc
+
