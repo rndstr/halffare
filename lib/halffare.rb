@@ -1,4 +1,15 @@
-require 'halffare/version.rb'
+require 'mechanize'
+require 'highline/import'
+require 'logger'
+require 'date'
+require 'yaml'
 
-# Add requires for other files you add to your project here, so
-# you just need to require this one file in your bin file
+require 'halffare/version.rb'
+require 'halffare/fetch.rb'
+require 'halffare/stats.rb'
+require 'halffare/model/order.rb'
+require 'halffare/price.rb'
+require 'halffare/price_base.rb'
+require 'halffare/price_guess.rb'
+require 'halffare/price_sbb.rb'
+

@@ -15,50 +15,61 @@ program_desc 'Evaluates whether a SBB Half-Fare travelcard is profitable based o
 
 version Halffare::VERSION
 
-
-desc 'Your username for sbb.ch'
-arg_name 'username'
-flag [:u,:username]
-
-desc 'Your password for sbb.ch'
-arg_name 'password'
-flag [:p,:password]
-
 desc 'Fetches your order history from sbb.ch and stores them in a file'
 arg_name 'Describe arguments to list here'
 command :fetch do |c|
+  c.desc 'Username for sbb.ch'
+  c.arg_name 'username'
+  c.flag [:u,:username]
+
+  c.desc 'Password for sbb.ch'
+  c.arg_name 'password'
+  c.flag [:p,:password]
+
   c.desc 'Filename to store the data in'
   c.default_value 'halffare.dat'
   c.arg_name 'file'
-  c.flag :f
+  c.flag [:f, :file]
+
+  c.desc 'Number of pages to retrieve'
+  c.default_value 2
+  c.arg_name 'count'
+  c.flag [:pages]
+
+  c.desc 'Overwrite an existing data file'
+  c.switch :force, :negatable => false
+
+  c.desc 'Write HTTP requests and responses to http.log'
+  c.switch :debug, :negatable => false
 
   c.action do |global_options,options,args|
-
-    # Your command logic here
-     
-    # If you have any errors, just raise them
-    # raise "that command made no sense"
-
-    puts "fetch command ran"
+    fetch = Halffare::Fetch.new(options[:debug])
+    fetch.login(options[:username], options[:password])
+    fetch.download(options[:file], options[:pages])
   end
 end
 
-desc 'Evaluates your order history'
+desc "Calculates and displays stats about your order history"
 arg_name 'Describe arguments to list here'
-command :eval do |c|
+command :stats do |c|
   c.desc 'Filename to read the data from'
   c.default_value 'halffare.dat'
   c.arg_name 'file'
-  c.flag :f
+  c.flag [:f, :file]
+
+  c.desc 'Strategy to use for determining price savings [guess, sbb]'
+  c.default_value :guess
+  c.arg_name :strategy
+  c.flag [:s, :strategy]
+
+  c.desc "Whether the past orders should be considered half-fare prices"
+  c.switch [:h, :halffare], :negotiable => false
 
   c.action do |global_options,options,args|
-
-    # Your command logic here
-     
-    # If you have any errors, just raise them
-    # raise "that command made no sense"
-
-    puts "eval command ran"
+    stats = Halffare::Stats.new
+    stats.read(options[:file])
+    stats.calculate(options[:strategy], options[:halffare])
+    stats.display
   end
 end
 
@@ -78,6 +89,8 @@ post do |global,command,options,args|
 end
 
 on_error do |exception|
+  p exception
+  p exception.backtrace.join("\n")
   # Error logic here
   # return false to skip default error handling
   true
