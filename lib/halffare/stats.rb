@@ -3,7 +3,7 @@ module Halffare
 
     def read(filename)
       @orders = []
-      file = File.open(filename, "r", :encoding => "BINARY") do |f|
+      file = File.open(filename, "r:UTF-8") do |f|
         while line = f.gets
           @orders.push(Halffare::Model::Order.new(line))
         end
@@ -30,6 +30,9 @@ module Halffare
       @date_min = false
       @orders.each do |order|
         halfprice, fullprice = price.get(order)
+        if halfprice != 0 && fullprice != 0
+          puts ">>> #{order.description} (#{order.price}): half=#{halfprice}, full=#{fullprice}"
+        end
         @halfprice += halfprice
         @fullprice += fullprice
 
@@ -58,10 +61,12 @@ module Halffare
     private
     def price_factory(strategy)
       case strategy
-      when :guess
+      when "guess"
         Halffare::PriceGuess
-      when :sbb
+      when "sbb"
         Halffare::PriceSbb
+      else
+        raise "unknown strategy: #{strategy}"
       end
     end
 

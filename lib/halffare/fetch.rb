@@ -73,7 +73,7 @@ module Halffare
           description << i.text.gsub(/[[:space:]]/, ' ').strip
         }
 
-        yield idx, order_date, travel_date, price, note, desription if block_given?
+        yield idx, order_date, travel_date, price, note, description if block_given?
       end
     end
 

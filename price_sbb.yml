@@ -1,0 +1,8 @@
+- "Gutschrift:Erstattung":
+    scale: {half: [-1,-2], full: [-0.5,-1]}
+- "Individual tickets":
+    scale: {half: [1,2], full: [0.5,1]}
+- "bike pass":
+    scale: {half: [1,1], full: [1,1]}
+- "ZVV Individual ticket/Day Pass city network Zürich (Zone 110)":
+    set: {half: 5.80, full: 8.40}
