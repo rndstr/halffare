@@ -27,14 +27,18 @@ command :fetch do |c|
   c.flag [:p,:password]
 
   c.desc 'Filename to store the data in'
-  c.default_value 'halffare.dat'
-  c.arg_name 'file'
-  c.flag [:f, :file]
+  c.default_value 'orders.halffare'
+  c.arg_name 'output'
+  c.flag [:o, :output]
 
   c.desc 'Number of pages to retrieve'
-  c.default_value 2
+  c.default_value 32
   c.arg_name 'count'
   c.flag [:pages]
+
+  c.desc 'Stop fetching orders when reaching months back'
+  c.arg_name :months
+  c.flag [:m, :months]
 
   c.desc 'Overwrite an existing data file'
   c.switch :force, :negatable => false
@@ -43,9 +47,13 @@ command :fetch do |c|
   c.switch :debug, :negatable => false
 
   c.action do |global_options,options,args|
-    fetch = Halffare::Fetch.new(options[:debug])
-    fetch.login(options[:username], options[:password])
-    fetch.download(options[:file], options[:pages])
+    if File.exists?(options[:output]) && !options[:force]
+      log_error "file #{options[:output]} exists, use --force or --output"
+    else
+      fetch = Halffare::Fetch.new(options[:debug])
+      fetch.login(options[:username], options[:password])
+      fetch.download(options[:output], options[:pages], options[:months])
+    end
   end
 end
 
@@ -53,23 +61,36 @@ desc "Calculates and displays stats about your order history"
 arg_name 'Describe arguments to list here'
 command :stats do |c|
   c.desc 'Filename to read the data from'
-  c.default_value 'halffare.dat'
-  c.arg_name 'file'
-  c.flag [:f, :file]
+  c.default_value 'orders.halffare'
+  c.arg_name 'input'
+  c.flag [:i, :input]
 
-  c.desc 'Strategy to use for determining price savings [guess, sbb]'
-  c.default_value :guess
+  c.desc 'Strategy to use for determining price savings [guess, sbb, sbbguess]'
+  c.default_value :sbbguess
   c.arg_name :strategy
   c.flag [:s, :strategy]
+#  c.must_match [:sbb, :guess, 'sbbguess']
 
-  c.desc "Whether the past orders should be considered half-fare prices"
-  c.switch [:h, :halffare], :negotiable => false
+  c.desc 'Prices found in input file are of type [half, full, ask]'
+  c.default_value :ask
+  c.arg_name :pricetype
+  c.flag [:p, :pricetype]
+#  c.must_match [:half, :full, :ask]
+
+  c.desc 'Restrict how many months in the past to consider orders'
+  c.arg_name :months
+  c.flag [:m, :months]
 
   c.action do |global_options,options,args|
     stats = Halffare::Stats.new
-    stats.read(options[:file])
-    stats.calculate(options[:strategy], options[:halffare])
-    stats.display
+    stats.read(options[:input], options[:months])
+    if stats.count > 0
+      if options[:pricetype] == :ask
+        options[:pricetype] = yesno('Did you buy your tickets with a half-fare card?', nil) ? 'half' : 'full';
+      end
+      stats.calculate(options[:strategy], options[:pricetype] == 'half')
+      stats.display(options[:pricetype] == 'half')
+    end
   end
 end
 

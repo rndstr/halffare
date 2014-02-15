@@ -14,7 +14,7 @@ module Halffare
     def login(username, password)
       username = ask("sbb.ch username?  ") unless username
       password = ask("sbb.ch password?  ") { |q| q.echo = "*" } unless password
-      puts ">>> logging in..."
+      log_info "logging in..."
 
       @agent.log = Logger.new('debug.log') if @debug
 
@@ -27,7 +27,7 @@ module Halffare
       @response = @agent.submit(login)
     end
 
-    def download(filename, pages)
+    def download(filename, pages, months)
       @response = @agent.get URL_ORDERS
 
       logged_in!
@@ -35,28 +35,40 @@ module Halffare
       begin
         left = pages
         page = 1
-        puts ">>> writing data to #{filename}"
+        stop_after = months ? (Date.today << months.to_i).strftime('%Y-%m-%d') : nil
+
+        log_info "will stop scraping after reaching #{stop_after}" unless stop_after.nil?
+        log_info "writing data to #{filename}"
+
         file = File.open(filename, "w")
-        begin
+        oldest_date_on_page = Date.today.strftime
+        loop do
           print ">>> page #{page}/#{pages} "
           orders do |idx, travel_date, order_date, price, note, name|
             print "."
+
             travel_date = Date.parse(travel_date).strftime
             order_date = Date.parse(order_date).strftime
+            oldest_date_on_page = [order_date, oldest_date_on_page].min
+
             file.write "#{travel_date}|#{order_date}|#{price}|#{note}|#{name}\n"
           end
           puts
           next!
 
+          log_debug "oldest order on page was on #{oldest_date_on_page}" if Halffare::DEBUG
+
           page += 1
           left -= 1
-        end while left > 0
+
+          break if !stop_after.nil? && oldest_date_on_page < stop_after
+          break if left <= 0
+        end
       rescue IOError => e
         puts e
       ensure
         file.close unless file == nil
       end
-      puts ">>> done."
     end
 
     private
@@ -67,6 +79,7 @@ module Halffare
         travel_date = order.xpath('./td[2]').text.gsub(/[[:space:]]/, ' ').strip
         price = order.xpath('./td[4]').text.gsub(/[[:space:]]/, ' ').strip
         note = order.xpath('./td[5]').text.gsub(/[[:space:]]/, ' ').strip
+
         description = ""
         @response.search('#bezeichnungen tr#ordersBezeichnung-' + idx + ' td ul li').each { |i|
           description << "::" unless description.empty?

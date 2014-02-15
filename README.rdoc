@@ -1,6 +1,6 @@
 = halffare
 
-Describe your project here
+Evaluates whether a SBB Half-Fare travelcard is profitable based on your online order history
 
 :include:halffare.rdoc
 
