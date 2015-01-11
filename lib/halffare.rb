@@ -20,7 +20,7 @@ module Kernel
   end
 
   def log_debug(str)
-    say(str) if Halffare::DEBUG
+    say(str) if Halffare.debug
   end
 
   def log_info(str)

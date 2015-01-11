@@ -30,7 +30,7 @@ module Halffare
           end
         }
       }
-      log_result "no satisfying match found" if Halffare::DEBUG
+      log_result "no satisfying match found" if Halffare.debug
       return price_guess_get(order) if @force_guess_fallback
 
       ask_for_price(order)
@@ -78,7 +78,7 @@ module Halffare
     def ask_for_price(order)
       guesshalf, guessfull = price_guess_get(order)
 
-      if !Halffare::DEBUG
+      if !Halffare.debug
         # was already logged
         log_order(order)
       end

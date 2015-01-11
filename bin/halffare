@@ -43,14 +43,15 @@ command :fetch do |c|
   c.desc 'Overwrite an existing data file'
   c.switch :force, :negatable => false
 
-  c.desc 'Write HTTP requests and responses to http.log'
+  c.desc 'Also print debug output'
   c.switch :debug, :negatable => false
 
   c.action do |global_options,options,args|
+    Halffare.debug = options[:debug]
     if File.exists?(options[:output]) && !options[:force]
       log_error "file #{options[:output]} exists, use --force or --output"
     else
-      fetch = Halffare::Fetch.new(options[:debug])
+      fetch = Halffare::Fetch.new()
       fetch.login(options[:username], options[:password])
       fetch.download(options[:output], options[:pages], options[:months])
     end
@@ -81,7 +82,11 @@ command :stats do |c|
   c.arg_name :months
   c.flag [:m, :months]
 
+  c.desc 'Also print debug output'
+  c.switch :debug, :negatable => false
+
   c.action do |global_options,options,args|
+    Halffare.debug = options[:debug]
     stats = Halffare::Stats.new
     stats.read(options[:input], options[:months])
     if stats.count > 0

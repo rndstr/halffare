@@ -5,8 +5,7 @@ module Halffare
     URL_LOGIN = 'http://www.sbb.ch/meta/login.html'
     URL_ORDERS = 'https://www.sbb.ch/ticketshop/b2c/dossierListe.do'
 
-    def initialize(debug)
-      @debug = debug
+    def initialize()
       @agent = ::Mechanize.new
       @agent.user_agent = USER_AGENT
     end
@@ -16,7 +15,7 @@ module Halffare
       password = ask("sbb.ch password?  ") { |q| q.echo = "*" } unless password
       log_info "logging in..."
 
-      @agent.log = Logger.new('debug.log') if @debug
+      #@agent.log = Logger.new('debug.log')
 
       @response = @agent.get URL_LOGIN
 
@@ -56,7 +55,7 @@ module Halffare
           puts
           next!
 
-          log_debug "oldest order on page was on #{oldest_date_on_page}" if Halffare::DEBUG
+          log_debug "oldest order on page was on #{oldest_date_on_page}" if Halffare.debug
 
           page += 1
           left -= 1

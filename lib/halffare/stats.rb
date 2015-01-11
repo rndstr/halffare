@@ -45,13 +45,13 @@ module Halffare
       @date_max = false
       @orders.each do |order|
 
-        if Halffare::DEBUG
+        if Halffare.debug
           log_order(order)
         end
 
         halfprice, fullprice = price.get(order)
 
-        if Halffare::DEBUG
+        if Halffare.debug
           if halfprice != 0 && fullprice != 0
             log_result "FOUND: #{order.description} (#{order.price}): half=#{currency(halfprice)}, full=#{currency(fullprice)}"
 
