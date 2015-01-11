@@ -50,7 +50,7 @@ module Kernel
   def log_order(order)
     log_info "\n"
     log_heading "#{order.order_date} #{order.description}"
-    log_emphasize "You pay: #{currency(order.price)}"
+    log_emphasize "You paid: #{currency(order.price)}"
   end
 
   def yesno(prompt = 'Continue?', default = true)

@@ -88,7 +88,8 @@ module Halffare
         description = ""
         @response.search('#bezeichnungen tr#ordersBezeichnung-' + idx + ' td ul li').each { |i|
           description << "::" unless description.empty?
-          description << i.text.gsub(/[[:space:]]/, ' ').strip
+
+          description << i.to_s.gsub(/<br>.*</, '<').gsub(/[[:space:]]/, ' ').gsub(/<.*?>/, '').strip
         }
 
         yield idx, order_date, travel_date, price, note, description if block_given?
@@ -102,7 +103,7 @@ module Halffare
 
     def logged_in!
       error = @response.at '.skinMessageBoxError'
-      if  error != nil
+      if error != nil
         STDERR.puts "ERROR: Not logged in, verify your username and password"
         exit 1
       end
