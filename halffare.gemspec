@@ -3,14 +3,22 @@ require File.join([File.dirname(__FILE__),'lib','halffare','version.rb'])
 spec = Gem::Specification.new do |s| 
   s.name = 'halffare'
   s.version = Halffare::VERSION
-  s.author = 'Your Name Here'
-  s.email = 'your@email.address.com'
-  s.homepage = 'http://your.website.com'
+  s.author = 'Roland Schilter'
+  s.email = 'roli@schilter.me'
+  s.homepage = 'http://schilter.me'
   s.platform = Gem::Platform::RUBY
-  s.summary = 'A description of your project'
+  s.summary = 'Evaluates whether a SBB Half-Fare travelcard is profitable based on your online order history',
 # Add your other files here if you make them
   s.files = %w(
 bin/halffare
+lib/halffare/model/order.rb
+lib/halffare/fetch.rb
+lib/halffare/price.rb
+lib/halffare/price_base.rb
+lib/halffare/price_guess.rb
+lib/halffare/price_sbb.rb
+lib/halffare/pricerules_sbb.yml
+lib/halffare/stats.rb
 lib/halffare/version.rb
 lib/halffare.rb
   )
@@ -24,4 +32,6 @@ lib/halffare.rb
   s.add_development_dependency('rdoc')
   s.add_development_dependency('aruba')
   s.add_runtime_dependency('gli','2.9.0')
+  s.add_runtime_dependency('mechanize','2.7.3')
+  s.add_runtime_dependency('highline','1.6.21')
 end
