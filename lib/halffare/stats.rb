@@ -6,7 +6,10 @@ module Halffare
       start = months ? (Date.today << months.to_i).strftime('%Y-%m-%d') : nil
       file = File.open(filename, "r:UTF-8") do |f|
         while line = f.gets
-          @orders.push(Halffare::Model::Order.new(line)) if start.nil? || line[0,10] >= start
+          order = Halffare::Model::Order.new(line)
+          if (start.nil? || line[0,10] >= start) && (order.note != Fetch::ORDER_NOTE_FILE_CREATED)
+            @orders.push(order)
+          end
         end
       end
       log_info "read #{@orders.length} orders from #{filename}"

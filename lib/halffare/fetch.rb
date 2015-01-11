@@ -4,6 +4,7 @@ module Halffare
     USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11'
     URL_LOGIN = 'http://www.sbb.ch/meta/login.html'
     URL_ORDERS = 'https://www.sbb.ch/ticketshop/b2c/dossierListe.do'
+    ORDER_NOTE_FILE_CREATED = 'halffare-orders-file-created'
 
     def initialize()
       @agent = ::Mechanize.new
@@ -41,6 +42,11 @@ module Halffare
 
         file = File.open(filename, "w")
         oldest_date_on_page = Date.today.strftime
+
+        # fake entry so when evaluating this file the calculation goes up until today
+        # and not to the last order.
+        file.write "#{oldest_date_on_page}|#{oldest_date_on_page}|0|#{ORDER_NOTE_FILE_CREATED}|\n"
+
         loop do
           print ">>> page #{page}/#{pages} "
           orders do |idx, travel_date, order_date, price, note, name|
