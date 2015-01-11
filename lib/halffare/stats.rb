@@ -102,7 +102,7 @@ module Halffare
       log_info "OVERALL"
       log_info "orders: #{@orders.length}"
       log_info "first travel date: #{@date_min}"
-      log_info "last  travel date: #{@date_max} (#{days} days)"
+      log_info "last travel date : #{@date_max} (#{days} days)"
       log_info "half-fare price  : #{currency(@halfprice)}#{halffare ? ' (what you paid)':''}"
       log_info "full price       : #{currency(@fullprice)}#{halffare ? '' : ' (what you paid)'}"
       log_info "half-fare savings: #{currency(@fullprice - @halfprice)}"

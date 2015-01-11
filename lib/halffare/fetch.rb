@@ -56,7 +56,7 @@ module Halffare
             order_date = Date.parse(order_date).strftime
             oldest_date_on_page = [order_date, oldest_date_on_page].min
 
-            file.write "#{travel_date}|#{order_date}|#{price}|#{note}|#{name}\n"
+            file.write "#{travel_date}|#{order_date}|#{price}|#{note}|#{name}\n" if stop_after.nil? || travel_date >= stop_after
           end
           puts
           next!
