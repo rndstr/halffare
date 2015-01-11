@@ -112,7 +112,7 @@ module Halffare
       log_info "half-fare savings: #{currency(saved_per_day)}"
 
       say("\n")
-      log_info "Halffare Card"
+      log_info "Half-Fare Card"
       log_info "-------------"
 
       config['cards'].each do |months,cash|
