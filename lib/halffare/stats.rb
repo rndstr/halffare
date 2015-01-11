@@ -1,7 +1,11 @@
 module Halffare
   class Stats
 
-    def read(filename, months)
+    # Reads orders from `filename` that date back to max `months` months.
+    #
+    # @param filename [String]       The filename to read from
+    # @param months   [Integer, nil] Number of months look back or nil for all
+    def read(filename, months=nil)
       @orders = []
       start = months ? (Date.today << months.to_i).strftime('%Y-%m-%d') : nil
       file = File.open(filename, "r:UTF-8") do |f|
@@ -22,10 +26,15 @@ module Halffare
       end
     end
 
+    # How many orders were processed.
     def count
       @orders.length
     end
 
+    # Calculates prices according to given strategy.
+    #
+    # @param strategy [String] Strategy name
+    # @param halffare [true, false] True if tickets were bought with a halffare card
     def calculate(strategy, halffare)
       @halfprice = 0
       @fullprice = 0
@@ -74,6 +83,7 @@ module Halffare
       end
     end
 
+    # Load config file.
     def config
       @config ||= YAML.load_file(File.expand_path('../../../halffare.yml', __FILE__))
     end
@@ -100,6 +110,10 @@ module Halffare
       log_info "PER DAY"
       log_info "you pay          : #{currency(paid_per_day)}"
       log_info "half-fare savings: #{currency(saved_per_day)}"
+
+      say("\n")
+      log_info "Halffare Card"
+      log_info "-------------"
 
       config['cards'].each do |months,cash|
         say("\n")

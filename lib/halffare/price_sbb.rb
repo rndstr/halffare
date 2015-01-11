@@ -7,6 +7,7 @@ module Halffare
   class PriceSbb < PriceGuess
     alias :price_guess_get :get
 
+    # @param force_guess_fallback [true, false] To use `guess` strategy as fallback instead of asking the user
     def initialize(force_guess_fallback = false)
       @force_guess_fallback = force_guess_fallback
     end
@@ -19,13 +20,13 @@ module Halffare
             case
             when definition['scale'] != nil
               log_debug "found scale rule: #{definition}"
-              return get_scale(definition, order)
+              return price_scale(definition, order)
             when definition['set'] != nil
               log_debug "found set rule: #{definition}"
-              return get_set(definition, order)
+              return price_set(definition, order)
             when definition['choices'] != nil
               log_debug "found choices rules: #{definition}"
-              return get_choices(definition, order)
+              return price_choices(definition, order)
             end
           end
         }
@@ -37,18 +38,21 @@ module Halffare
     end
 
     private
+    # Loads rules form the rules file.
     def rules
       @rules ||= YAML.load_file(File.expand_path('../pricerules_sbb.yml', __FILE__))
     end
 
-    def get_scale(definition, order)
+    # Calculates the prices according to the `scale` definition.
+    def price_scale(definition, order)
       return definition['scale'][price_paid][0] * order.price, definition['scale'][price_paid][1] * order.price
     end
 
-    def get_set(definition, order)
+    # Calculates the prices according to the `set` definition.
+    def price_set(definition, order)
       if order.price != definition['set'][price_paid]
         log_order(order)
-        log_error 'order matched but price differs, ignoring'
+        log_error 'order matched but price differs; ignoring this order.'
         p order
         p definition
         return 0, 0
@@ -57,7 +61,8 @@ module Halffare
       end
     end
 
-    def get_choices(definition, order)
+    # Calculates the prices according to the `choices` definition.
+    def price_choices(definition, order)
       # auto select
       definition['choices'].each { |name,prices| return prices['half'], prices['full'] if prices[price_paid] == order.price }
 
@@ -75,6 +80,7 @@ module Halffare
       end
     end
 
+    # Ask the user for the price.
     def ask_for_price(order)
       guesshalf, guessfull = price_guess_get(order)
 
@@ -87,7 +93,7 @@ module Halffare
         other = ask("What would have been the full price?  ", Float) { |q| q.default = guessfull }
         return order.price, other
       else
-        other = ask("What would have been the the half-fare price?  ", Float) { |q| q.default = guesshalf }
+        other = ask("What would have been the half-fare price?  ", Float) { |q| q.default = guesshalf }
         return other, order.price
       end
     end

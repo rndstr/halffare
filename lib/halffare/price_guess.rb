@@ -1,6 +1,6 @@
 module Halffare
   # Simple guesstimator assuming half-fare card is always half the price
-  # which is _not_ the case in reality
+  # which is probably the case for non-regional tickets
   class PriceGuess < PriceBase
     def get(order)
       price = order.price.to_f
