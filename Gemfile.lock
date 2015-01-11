@@ -3,6 +3,8 @@ PATH
   specs:
     halffare (0.1.0)
       gli (= 2.9.0)
+      highline (= 1.6.21)
+      mechanize (= 2.7.3)
 
 GEM
   remote: https://rubygems.org/
@@ -67,7 +69,5 @@ PLATFORMS
 DEPENDENCIES
   aruba
   halffare!
-  highline
-  mechanize
   rake
   rdoc
