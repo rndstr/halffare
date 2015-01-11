@@ -9,7 +9,6 @@ program_desc 'Evaluates whether a SBB Half-Fare travelcard is profitable based o
 version Halffare::VERSION
 
 desc 'Fetches your order history from sbb.ch and stores them in a file'
-arg_name 'Describe arguments to list here'
 command :fetch do |c|
   c.desc 'Username for sbb.ch'
   c.arg_name 'username'
@@ -52,7 +51,6 @@ command :fetch do |c|
 end
 
 desc "Calculates and displays stats about your order history"
-arg_name 'Describe arguments to list here'
 command :stats do |c|
   c.desc 'Filename to read the data from'
   c.default_value 'orders.halffare'

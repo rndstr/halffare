@@ -1,8 +1,9 @@
-= halffare - evaluate whether a SBB Half-Fare travelcard is profitable based on your online order history
+= halffare
 
-This software is in no way affiliated with, authorized, maintained, sponsored or endorsed by sbb.ch or any of its affiliates or subsidiaries.
+_This software is in no way affiliated with, authorized, maintained, sponsored or endorsed by sbb.ch or any of its affiliates or subsidiaries._
 
 == Description
++halffare+ evaluates whether a SBB Half-Fare travelcard is profitable based on your online order history.
 
 Provides commands to download your online order history from sbb.ch and evaluate it.
 
@@ -24,5 +25,5 @@ Evaluate
 
 == License
 
-[MIT license](https://github.com/rndstr/halffare/blob/master/LICENSE)
+{MIT license}(https://github.com/rndstr/halffare/blob/master/LICENSE)
 
