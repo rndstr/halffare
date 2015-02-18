@@ -33,7 +33,7 @@ module Halffare
       logged_in!
 
       begin
-        left = pages
+        left = pages.to_i
         page = 1
         stop_after = months ? (Date.today << months.to_i).strftime('%Y-%m-%d') : nil
 
