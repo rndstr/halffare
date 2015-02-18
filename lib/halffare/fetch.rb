@@ -5,6 +5,7 @@ module Halffare
     URL_LOGIN = 'http://www.sbb.ch/meta/login.html'
     URL_ORDERS = 'https://www.sbb.ch/ticketshop/b2c/dossierListe.do'
     ORDER_NOTE_FILE_CREATED = 'halffare-orders-file-created'
+    SEPARATOR = '::'
 
     def initialize()
       @agent = ::Mechanize.new
@@ -45,18 +46,18 @@ module Halffare
 
         # fake entry so when evaluating this file the calculation goes up until today
         # and not to the last order.
-        file.write "#{oldest_date_on_page}|#{oldest_date_on_page}|0|#{ORDER_NOTE_FILE_CREATED}|\n"
+        file.write "#{oldest_date_on_page}|#{oldest_date_on_page}|0|#{ORDER_NOTE_FILE_CREATED}||\n"
 
         loop do
           print ">>> page #{page}/#{pages} "
-          orders do |idx, travel_date, order_date, price, note, name|
+          orders do |idx, travel_date, order_date, price, note, description, user|
             print "."
 
             travel_date = Date.parse(travel_date).strftime
             order_date = Date.parse(order_date).strftime
             oldest_date_on_page = [order_date, oldest_date_on_page].min
 
-            file.write "#{travel_date}|#{order_date}|#{price}|#{note}|#{name}\n" if stop_after.nil? || travel_date >= stop_after
+            file.write "#{travel_date}|#{order_date}|#{price}|#{note}|#{description}|#{user}\n" if stop_after.nil? || travel_date >= stop_after
           end
           puts
           next!
@@ -85,14 +86,19 @@ module Halffare
         price = order.xpath('./td[4]').text.gsub(/[[:space:]]/, ' ').strip
         note = order.xpath('./td[5]').text.gsub(/[[:space:]]/, ' ').strip
 
-        description = ""
-        @response.search('#bezeichnungen tr#ordersBezeichnung-' + idx + ' td ul li').each { |i|
-          description << "::" unless description.empty?
+        description = ''
+        user = ''
 
-          description << i.to_s.gsub(/<br>.*</, '<').gsub(/[[:space:]]/, ' ').gsub(/<.*?>/, '').strip
+        @response.search('#bezeichnungen tr#ordersBezeichnung-' + idx + ' td ul').each { |ul|
+          ul.to_s.scan(/<li>(.*)<br>(.*)<\/li>/) do |d,u|
+            description << SEPARATOR << d.gsub(/[[:space:]]/, ' ').strip
+            user << SEPARATOR << u.gsub(/[[:space:]]/, ' ').strip
+          end
         }
+        description << SEPARATOR
+        user << SEPARATOR
 
-        yield idx, order_date, travel_date, price, note, description if block_given?
+        yield idx, order_date, travel_date, price, note, description, user if block_given?
       end
     end
 
