@@ -10,11 +10,31 @@ evaluate it.
 
 ![halffare evaluation results](https://raw.githubusercontent.com/rndstr/halffare/master/media/halffare-results.png)
 
-## Getting started
+## Installation
 
-Install
+### Gem
 
     $ gem install halffare
+
+### GitHub
+
+Download source
+
+    $ git clone https://github.com/rndstr/halffare.git
+
+Enter repo
+
+    $ cd halffare
+
+Install required gems
+
+    $ bundle
+
+The executable can then be run as follows
+
+    $ bundle exec bin/halffare
+
+## Getting started
 
 Download order history
 
