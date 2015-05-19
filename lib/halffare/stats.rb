@@ -5,13 +5,15 @@ module Halffare
     #
     # @param filename [String]       The filename to read from
     # @param months   [Integer, nil] Number of months look back or nil for all
-    def read(filename, months=nil)
+    # @param user     [user]         Restrict users with given name
+    def read(filename, months=nil, user=nil)
       @orders = []
       start = months ? (Date.today << months.to_i).strftime('%Y-%m-%d') : nil
       file = File.open(filename, "r:UTF-8") do |f|
         while line = f.gets
           order = Halffare::Model::Order.new(line)
-          if (start.nil? || line[0,10] >= start) && (order.note != Fetch::ORDER_NOTE_FILE_CREATED)
+
+          if (user.nil? || order.has_user?(user)) && (start.nil? || line[0,10] >= start) && order.note != Fetch::ORDER_NOTE_FILE_CREATED
             @orders.push(order)
           end
         end

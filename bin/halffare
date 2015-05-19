@@ -69,6 +69,10 @@ command :stats do |c|
   c.flag [:p, :pricetype]
 #  c.must_match [:half, :full, :ask]
 
+  c.desc 'Restrict tickets for user name (if multiple users in same order, divides by count)'
+  c.arg_name :user
+  c.flag [:u, :user]
+
   c.desc 'Restrict how many months in the past to consider orders'
   c.arg_name :months
   c.flag [:m, :months]
@@ -79,7 +83,7 @@ command :stats do |c|
   c.action do |global_options,options,args|
     Halffare.debug = options[:debug]
     stats = Halffare::Stats.new
-    stats.read(options[:input], options[:months])
+    stats.read(options[:input], options[:months], options[:user])
     if stats.count > 0
       if options[:pricetype] == :ask
         options[:pricetype] = yesno('Did you buy your tickets with a half-fare card?', nil) ? 'half' : 'full';

@@ -10,6 +10,9 @@ This software is in no way affiliated with, authorized, maintained, sponsored or
 
 Provides commands to download your online order history from sbb.ch and evaluate it.
 
+Be aware that the calculation is not rock-solid since we need to figure out the prices with or without the
+half-fare card. The description of orders can be vague.
+
 == Installation
 
 == Examples

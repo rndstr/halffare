@@ -5,7 +5,7 @@ module Halffare
     URL_LOGIN = 'http://www.sbb.ch/meta/login.html'
     URL_ORDERS = 'https://www.sbb.ch/ticketshop/b2c/dossierListe.do'
     ORDER_NOTE_FILE_CREATED = 'halffare-orders-file-created'
-    SEPARATOR = '::'
+    SEPARATOR = ::Halffare::Model::Order::SEPARATOR
 
     def initialize()
       @agent = ::Mechanize.new
