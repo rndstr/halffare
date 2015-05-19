@@ -3,9 +3,10 @@ require File.join([File.dirname(__FILE__),'lib','halffare','version.rb'])
 spec = Gem::Specification.new do |s| 
   s.name = 'halffare'
   s.version = Halffare::VERSION
+  s.license = 'MIT'
   s.author = 'Roland Schilter'
   s.email = 'roli@schilter.me'
-  s.homepage = 'http://schilter.me'
+  s.homepage = 'https://github.com/rndstr/halffare'
   s.platform = Gem::Platform::RUBY
   s.summary = 'Evaluates whether a SBB Half-Fare travelcard is profitable based on your online order history',
 # Add your other files here if you make them

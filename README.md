@@ -10,15 +10,11 @@ evaluate it.
 
 ![halffare evaluation results](https://raw.githubusercontent.com/rndstr/halffare/master/media/halffare-results.png)
 
-## Installation
+## Getting started
 
-…
+Install
 
-## Usage
-
-See [halffare.rdoc](https://github.com/rndstr/halffare/blob/master/halffare.rdoc)
-
-## Example
+    $ gem install halffare
 
 Download order history
 
@@ -28,9 +24,13 @@ Evaluate orders
 
     $ halffare stats --input=year.halffare
 
-See more options
+More options
 
     $ halffare help
+
+## Usage
+
+See [halffare.rdoc](https://github.com/rndstr/halffare/blob/master/halffare.rdoc)
 
 ## License
 
