@@ -8,7 +8,8 @@ spec = Gem::Specification.new do |s|
   s.email = 'roli@schilter.me'
   s.homepage = 'https://github.com/rndstr/halffare'
   s.platform = Gem::Platform::RUBY
-  s.summary = 'Evaluates whether a SBB Half-Fare travelcard is profitable based on your online order history',
+  s.summary = 'SBB Half-Fare travelcard profitability'
+  s.description = 'Evaluates whether a SBB Half-Fare travelcard is profitable based on your online order history'
 # Add your other files here if you make them
   s.files = %w(
 bin/halffare

@@ -1,6 +1,6 @@
 == halffare - Evaluates whether a SBB Half-Fare travelcard is profitable based on your online order history
 
-v0.1.0
+v0.1.1
 
 === Global Options
 === --help
